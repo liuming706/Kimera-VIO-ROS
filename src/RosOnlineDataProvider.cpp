@@ -7,15 +7,14 @@
 
 #include "kimera_vio_ros/RosOnlineDataProvider.h"
 
-#include <string>
-#include <vector>
-
-#include <glog/logging.h>
-
 #include <geometry_msgs/PoseStamped.h>
+#include <glog/logging.h>
 #include <sensor_msgs/image_encodings.h>
 #include <std_msgs/Bool.h>
 #include <tf2_ros/static_transform_broadcaster.h>
+
+#include <string>
+#include <vector>
 
 #include "kimera_vio_ros/utils/UtilsRos.h"
 
@@ -134,7 +133,9 @@ RosOnlineDataProvider::RosOnlineDataProvider(const VioParams& vio_params)
       break;
     }
 
-    default: { LOG(FATAL) << "Frontend type not recognized."; }
+    default: {
+      LOG(FATAL) << "Frontend type not recognized.";
+    }
   }
 
   // Define Reinitializer Subscriber
@@ -168,6 +169,7 @@ RosOnlineDataProvider::RosOnlineDataProvider(const VioParams& vio_params)
                       this);
   }
 
+  publishStaticTf(gtsam::Pose3(), base_link_frame_id_, "imu_link");
   publishStaticTf(vio_params_.camera_params_.at(0).body_Pose_cam_,
                   base_link_frame_id_,
                   left_cam_frame_id_);
